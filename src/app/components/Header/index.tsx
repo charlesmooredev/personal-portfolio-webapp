@@ -15,7 +15,7 @@ export function Header() {
             <img
               src="/assets/logo.png"
               alt="Charles Moore"
-              className="h-[50px]"
+              className="h-[65px]"
             />
           </NavLink>
         </div>

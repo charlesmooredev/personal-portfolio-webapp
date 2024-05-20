@@ -27,7 +27,7 @@ export function ProjectsThumbnail({ data, time }: Props) {
       <div className="w-full overflow-hidden rounded-[12px] border-2 border-black-900">
         <img
           src={data.thumbnail}
-          className="h-fit w-fit opacity-95 hover:opacity-100 hover:scale-105 transition-effect rounded-[10px]"
+          className="w-fit opacity-95 hover:opacity-100 hover:scale-105 transition-effect rounded-[10px]"
         />
       </div>
       <div className="font-semibold text-[1.5rem]">{data.name}</div>

@@ -1,5 +1,28 @@
 import { Wrapper } from '../../components/Wrapper'
+import { socialLinks } from '../../helpers/Socials.tsx'
+import { ContactCard } from '../../components/Contact/ContactCard'
 
 export function ContactPage() {
-  return <Wrapper>Contact page here</Wrapper>
+  return (
+    <Wrapper>
+      <div className="text-[40px] font-semibold">Contact</div>
+      <div className="text-[20px] lg:text-[30px]">
+        If you're interested in discussing potential job opportunities and
+        exploring collaboration possibilities, please connect with me through
+        the link below.
+      </div>
+      <div className="w-1/2">
+        <div className="flex flex-wrap items-center gap-[20px]">
+          {socialLinks.map((social) => (
+            <ContactCard
+              key={social.name}
+              icon={social.icon}
+              name={social.name}
+              url={social.url}
+            />
+          ))}
+        </div>
+      </div>
+    </Wrapper>
+  )
 }

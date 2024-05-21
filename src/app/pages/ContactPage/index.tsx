@@ -9,7 +9,7 @@ export function ContactPage() {
       <div className="text-[20px] lg:text-[30px]">
         If you're interested in discussing potential job opportunities and
         exploring collaboration possibilities, please connect with me through
-        the link below.
+        the links below.
       </div>
       <div className="w-1/2">
         <div className="flex flex-wrap items-center gap-[20px]">

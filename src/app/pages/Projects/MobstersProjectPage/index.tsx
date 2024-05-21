@@ -9,7 +9,7 @@ import { ProjectInformationUrl } from '../../../components/Project/ProjectInform
 export function MobstersProjectPage() {
   return (
     <Wrapper>
-      <ProjectTitle>Mobsters: New Beginnings</ProjectTitle>
+      <ProjectTitle>Mobsters</ProjectTitle>
       <ProjectDescription>
         Mobsters: New Beginnings is an immersive browser-based game where
         players strive to rise through the ranks to become the top mobster.

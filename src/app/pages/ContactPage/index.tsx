@@ -11,7 +11,7 @@ export function ContactPage() {
         exploring collaboration possibilities, please connect with me through
         the links below.
       </div>
-      <div className="w-1/2">
+      <div className="w-full">
         <div className="flex flex-wrap items-center gap-[20px]">
           {socialLinks.map((social) => (
             <ContactCard

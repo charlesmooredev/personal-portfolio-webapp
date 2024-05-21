@@ -4,5 +4,6 @@ declare namespace App.Data {
     name: string
     thumbnail: string
     link: string
+    description: string
   }
 }

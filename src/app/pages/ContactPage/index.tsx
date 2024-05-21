@@ -12,7 +12,7 @@ export function ContactPage() {
         the links below.
       </div>
       <div className="w-full">
-        <div className="flex flex-wrap items-center gap-[20px]">
+        <div className="flex flex-col lg:flex-row lg:items-center gap-[20px]">
           {socialLinks.map((social) => (
             <ContactCard
               key={social.name}

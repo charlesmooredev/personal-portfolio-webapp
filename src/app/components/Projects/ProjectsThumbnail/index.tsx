@@ -40,7 +40,7 @@ export function ProjectsThumbnail({ data, time }: Props) {
           className="w-fit opacity-95 hover:opacity-100 hover:scale-105 transition-effect rounded-[10px]"
         />
       </div>
-      <div className="lg:bg-transparent lg:space-y-0 space-y-[5px] bg-black-900 rounded-[10px] p-[5px]">
+      <div className="lg:bg-transparent lg:space-y-0 space-y-[5px] rounded-[10px] p-[5px]">
         <div className="font-semibold text-[1.5rem]">{data.name}</div>
         <div className="lg:hidden text-black-100 text-[1.10rem] space-y-[10px]">
           <div>{data.description}</div>

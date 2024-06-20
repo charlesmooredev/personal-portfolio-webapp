@@ -6,6 +6,7 @@ import { OzoneProjectPage } from '../../pages/Projects/OzoneProjectPage'
 import { MyLikenessProjectPage } from '../../pages/Projects/MyLikenessProjectPage'
 import { MobstersProjectPage } from '../../pages/Projects/MobstersProjectPage'
 import { SororityWarsProjectPage } from '../../pages/Projects/SororityWarsProjectPage'
+import { HeartlandTattooCoProjectPage } from '../../pages/Projects/HeartlandTattooCoProjectPage'
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: ProjectRoutes.Mobsters,
     element: <MobstersProjectPage />,
+  },
+  {
+    path: ProjectRoutes.HeartlandTattooCo,
+    element: <HeartlandTattooCoProjectPage />,
   },
   {
     path: '*',

@@ -8,4 +8,5 @@ export enum ProjectRoutes {
   SororityWars = '/projects/sorority-wars',
   Mobsters = '/projects/mobsters',
   MyLikeness = '/projects/mylikeness',
+  HeartlandTattooCo = '/projects/heartland-tattoo-company',
 }

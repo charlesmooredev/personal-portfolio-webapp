@@ -35,12 +35,11 @@ export const projects = [
     thumbnail: '/assets/thumbnail/heartland_tattoo_company.jpg',
     link: ProjectRoutes.HeartlandTattooCo,
     description:
-      'Ozone is a cutting-edge browser-based video editor that allows users to create and edit videos seamlessly within their web browser. ',
+      ' Heartland Tattoo Company is a tattoo shop located in Tennessee, renowned for its exceptional artistry and welcoming atmosphere.',
     skills: [
       { name: 'React' },
       { name: 'TypeScript' },
       { name: 'Redux' },
-      { name: 'Websockets' },
       { name: 'TailwindCSS' },
     ],
   },

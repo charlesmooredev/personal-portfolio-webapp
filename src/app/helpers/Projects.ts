@@ -25,7 +25,8 @@ export const projects = [
     skills: [
       { name: 'React' },
       { name: 'TypeScript' },
-      { name: 'Spectrum Web Components' },
+      { name: 'Redux' },
+      { name: 'Bootstrap Icons' },
       { name: 'TailwindCSS' },
     ],
   },

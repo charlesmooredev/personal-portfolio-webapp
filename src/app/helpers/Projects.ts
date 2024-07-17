@@ -17,6 +17,32 @@ export const projects = [
     ],
   },
   {
+    name: 'Call of Development',
+    thumbnail: '/assets/thumbnail/call_of_development.jpg',
+    link: ProjectRoutes.CallOfDevelopment,
+    description:
+      'Call of Development presents a concept for a Call of Duty menu, seamlessly integrating both new and old school elements into the design.',
+    skills: [
+      { name: 'React' },
+      { name: 'TypeScript' },
+      { name: 'Spectrum Web Components' },
+      { name: 'TailwindCSS' },
+    ],
+  },
+  {
+    name: 'Adobe Firefly Concept',
+    thumbnail: '/assets/thumbnail/adobe_firefly.jpg',
+    link: ProjectRoutes.AdobeFireflyConcept,
+    description:
+      "This project is an enhanced concept version of Adobe Firefly utilizing React, TailwindCSS, and Adobe's Spectrum Web Components.",
+    skills: [
+      { name: 'React' },
+      { name: 'TypeScript' },
+      { name: 'Spectrum Web Components' },
+      { name: 'TailwindCSS' },
+    ],
+  },
+  {
     name: 'MyLikenessAI',
     thumbnail: '/assets/thumbnail/mylikenessai.jpg',
     link: ProjectRoutes.MyLikeness,

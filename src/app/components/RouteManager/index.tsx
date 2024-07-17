@@ -7,6 +7,8 @@ import { MyLikenessProjectPage } from '../../pages/Projects/MyLikenessProjectPag
 import { MobstersProjectPage } from '../../pages/Projects/MobstersProjectPage'
 import { SororityWarsProjectPage } from '../../pages/Projects/SororityWarsProjectPage'
 import { HeartlandTattooCoProjectPage } from '../../pages/Projects/HeartlandTattooCoProjectPage'
+import { AdobeFireflyConceptPage } from '../../pages/Projects/AdobeFireflyConceptPage'
+import { CallOfDevelopmentPage } from '../../pages/Projects/CallOfDevelopmentPage'
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
   {
     path: ProjectRoutes.Ozone,
     element: <OzoneProjectPage />,
+  },
+  {
+    path: ProjectRoutes.AdobeFireflyConcept,
+    element: <AdobeFireflyConceptPage />,
+  },
+  {
+    path: ProjectRoutes.CallOfDevelopment,
+    element: <CallOfDevelopmentPage />,
   },
   {
     path: ProjectRoutes.MyLikeness,

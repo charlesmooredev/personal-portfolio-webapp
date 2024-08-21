@@ -8,7 +8,7 @@ interface Props {
 
 export function Wrapper({ children }: Props) {
   return (
-    <div className="w-screen pt-[15px] pb-[100px]">
+    <div className="w-screen pb-[100px]">
       <Header />
       <ContentWrapper>{children}</ContentWrapper>
     </div>

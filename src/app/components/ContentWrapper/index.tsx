@@ -7,7 +7,7 @@ interface Props {
 export function ContentWrapper({ children }: Props) {
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="w-full lg:w-[1200px] space-y-[30px] px-[10px] lg:px-0">
+      <div className="w-full lg:max-w-screen-xl space-y-[30px] pt-20 px-2.5">
         {children}
       </div>
     </div>

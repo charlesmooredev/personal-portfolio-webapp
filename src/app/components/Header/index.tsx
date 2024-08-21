@@ -8,8 +8,8 @@ const headerRoutes = [
 
 export function Header() {
   return (
-    <div className="w-full mb-[20px] px-[10px] lg:px-[100px]">
-      <div className="w-full flex items-center">
+    <div className="w-full flex flex-col items-center fixed bg-black-950/50 px-2 py-1 backdrop-blur-md z-[9999]">
+      <div className="w-full lg:max-w-screen-xl flex items-center">
         <div className="w-[100px]">
           <NavLink to={Routes.Projects}>
             <img

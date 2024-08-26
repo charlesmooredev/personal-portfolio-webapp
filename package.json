@@ -17,6 +17,7 @@
     "react-animate-on-scroll": "^2.1.9",
     "react-bootstrap-icons": "^1.11.4",
     "react-dom": "^18.2.0",
+    "react-ga4": "^2.1.0",
     "react-router-dom": "^6.23.1",
     "sort-by": "^1.2.0"
   },

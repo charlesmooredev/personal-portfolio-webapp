@@ -5,10 +5,13 @@ declare namespace App.Data {
   }
 
   export type ProjectData = {
+    id: string
     name: string
     thumbnail: string
-    link: string
     description: string
     skills: ProjectSkillData[]
+    role: string
+    responsibilities: string
+    projectUrl?: string
   }
 }

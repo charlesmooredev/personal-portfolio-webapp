@@ -1,5 +1,4 @@
 import { RouteManager } from './app/components/RouteManager'
-import 'animate.css/animate.compat.css'
 import { useEffect } from 'react'
 import ReactGA from 'react-ga4'
 
@@ -11,7 +10,7 @@ function App() {
     ReactGA.send({
       hitType: 'pageview',
       page: location.pathname,
-      title: location.pathname === '/' ? 'Landing Page' : 'Contact Page',
+      title: 'Portfolio',
     })
   }, [location.pathname])
 

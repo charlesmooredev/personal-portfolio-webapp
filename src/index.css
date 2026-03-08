@@ -3,11 +3,32 @@
 @tailwind utilities;
 
 body {
-    background-color: black;
-    color: #FFFFFF;
+    background-color: #0a0a0f;
+    color: #d0d0e0;
     font-family: "Quicksand", sans-serif;
+    overflow: hidden;
+    height: 100vh;
 }
 
-.transition-effect {
-    @apply duration-300 transition-all ease-in-out;
+#root {
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Custom scrollbar for app windows */
+.window-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.window-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.window-scroll::-webkit-scrollbar-thumb {
+    background: #3a3a4a;
+    border-radius: 4px;
+}
+
+.window-scroll::-webkit-scrollbar-thumb:hover {
+    background: #52526a;
 }

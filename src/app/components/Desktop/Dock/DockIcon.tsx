@@ -7,9 +7,17 @@ interface Props {
   onClick?: () => void
   href?: string
   mouseX: ReturnType<typeof useMotionValue<number>>
+  compact?: boolean
 }
 
-export function DockIcon({ icon, label, onClick, href, mouseX }: Props) {
+export function DockIcon({
+  icon,
+  label,
+  onClick,
+  href,
+  mouseX,
+  compact = false,
+}: Props) {
   const ref = useRef<HTMLDivElement>(null)
 
   const distance = useTransform(mouseX, (val) => {
@@ -17,7 +25,9 @@ export function DockIcon({ icon, label, onClick, href, mouseX }: Props) {
     return val - bounds.x - bounds.width / 2
   })
 
-  const widthSync = useTransform(distance, [-150, 0, 150], [48, 68, 48])
+  const restSize = compact ? 46 : 54
+  const peakSize = compact ? 56 : 70
+  const widthSync = useTransform(distance, [-150, 0, 150], [restSize, peakSize, restSize])
   const width = useSpring(widthSync, {
     stiffness: 300,
     damping: 25,
@@ -27,16 +37,22 @@ export function DockIcon({ icon, label, onClick, href, mouseX }: Props) {
     <motion.div
       ref={ref}
       style={{ width, height: width }}
-      className="relative flex items-center justify-center rounded-xl bg-surface-800/80 border border-white/10 cursor-pointer group backdrop-blur-sm"
+      className={`group relative flex cursor-pointer items-center justify-center rounded-[18px] border text-white backdrop-blur-xl shadow-[0_14px_30px_rgba(3,8,20,0.32)] ${
+        compact
+          ? 'border-white/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.2),rgba(255,255,255,0.1))]'
+          : 'border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.24),rgba(217,223,232,0.12))]'
+      }`}
       whileTap={{ scale: 0.85 }}
       transition={{ type: 'spring', bounce: 0.3, duration: 0.2 }}
     >
-      <div className="text-surface-200 flex items-center justify-center text-xl">
+      <div className="flex items-center justify-center text-xl text-white/92">
         {icon}
       </div>
-      <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-surface-800/90 backdrop-blur-xl text-surface-100 text-[11px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none border border-surface-700/50">
-        {label}
-      </div>
+      {!compact && (
+        <div className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-[12px] border border-white/90 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(234,238,244,0.92))] px-3 py-1 text-[11px] font-semibold text-[#19212d] opacity-0 shadow-[0_10px_24px_rgba(15,23,42,0.2)] transition-opacity duration-150 group-hover:opacity-100">
+          {label}
+        </div>
+      )}
     </motion.div>
   )
 

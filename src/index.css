@@ -2,16 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    :root {
+        color-scheme: dark;
+        font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+            radial-gradient(circle at top, #24314a 0%, rgba(36, 49, 74, 0) 34%),
+            linear-gradient(180deg, #dbe1eb 0%, #bcc5d3 42%, #98a5b8 100%);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        height: 100%;
+    }
+
+    body {
+        min-height: 100svh;
+        margin: 0;
+        background:
+            radial-gradient(circle at top, #24314a 0%, rgba(36, 49, 74, 0) 34%),
+            linear-gradient(180deg, #dbe1eb 0%, #bcc5d3 42%, #98a5b8 100%);
+        color: #f5f7fb;
+        font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        overflow: hidden;
+    }
+
+    button,
+    a,
+    input,
+    textarea,
+    select {
+        font: inherit;
+    }
+}
+
 body {
-    background-color: #0a0a0f;
-    color: #d0d0e0;
-    font-family: "Quicksand", sans-serif;
-    overflow: hidden;
-    height: 100vh;
+    min-height: 100svh;
 }
 
 #root {
-    height: 100vh;
+    min-height: 100svh;
     overflow: hidden;
 }
 
@@ -31,4 +64,12 @@ body {
 
 .window-scroll::-webkit-scrollbar-thumb:hover {
     background: #52526a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+    }
 }

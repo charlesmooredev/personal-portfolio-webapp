@@ -69,62 +69,57 @@ const skillCategories = [
 
 export function SkillsWindow() {
   return (
-    <div className="px-5 pb-8 pt-5 lg:px-8 lg:pb-10 lg:pt-7">
-      <div className="grid gap-8 border-b border-white/10 pb-7 lg:grid-cols-[minmax(0,1fr)_240px]">
+    <div className="p-4 sm:p-5 lg:p-6">
+      <div className="grid gap-5 border-b border-[rgb(var(--crt-line))] pb-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.36em] text-white/48">
-            Capabilities
+          <p className="text-[11px] uppercase text-[rgb(var(--crt-muted))]">
+            Capability Record
           </p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-[-0.05em] text-white lg:text-4xl">
+          <h2 className="mt-3 text-3xl font-black uppercase leading-none text-[rgb(var(--crt-text))] sm:text-5xl">
             Frontend systems with product-level polish.
           </h2>
-          <p className="mt-4 max-w-3xl text-[15px] leading-7 text-white/72 lg:text-base">
+          <p className="mt-4 max-w-4xl text-sm leading-7 text-[rgb(var(--crt-dim))] sm:text-base">
             Entrepreneurial full-stack engineer with 9+ years building
             production software from scratch, with the strongest depth in React,
-            TypeScript, interface design, and shipping disciplined frontend
-            architecture.
+            TypeScript, interface design, and disciplined frontend architecture.
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.36em] text-white/46">
-              Years
-            </p>
-            <p className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-white">
-              9+
-            </p>
+        <dl className="grid content-start gap-3 text-[12px] uppercase">
+          <div className="flex justify-between gap-4 border-b border-[rgb(var(--crt-line))] pb-3">
+            <dt className="text-[rgb(var(--crt-muted))]">Years</dt>
+            <dd className="text-[rgb(var(--crt-text))]">9+</dd>
           </div>
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.36em] text-white/46">
-              Core
-            </p>
-            <p className="mt-2 text-base text-white/74">
-              React, TypeScript, design systems
-            </p>
+          <div className="flex justify-between gap-4 border-b border-[rgb(var(--crt-line))] pb-3">
+            <dt className="text-[rgb(var(--crt-muted))]">Core</dt>
+            <dd className="text-[rgb(var(--crt-text))]">React / TS</dd>
           </div>
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.36em] text-white/46">
-              Shipping style
-            </p>
-            <p className="mt-2 text-base text-white/74">
-              Product-minded, fast, detail-heavy
-            </p>
+          <div className="flex justify-between gap-4 border-b border-[rgb(var(--crt-line))] pb-3">
+            <dt className="text-[rgb(var(--crt-muted))]">Style</dt>
+            <dd className="text-[rgb(var(--crt-green))]">Product-Minded</dd>
           </div>
-        </div>
+        </dl>
       </div>
 
-      <div className="mt-7 grid gap-x-8 gap-y-6 lg:grid-cols-2">
-        {skillCategories.map((category) => (
-          <section key={category.label} className="border-t border-white/10 pt-5">
-            <p className="text-[11px] uppercase tracking-[0.36em] text-white/48">
-              {category.label}
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2.5">
+      <div className="mt-5 grid gap-4 lg:grid-cols-2">
+        {skillCategories.map((category, index) => (
+          <section
+            key={category.label}
+            className="border border-[rgb(var(--crt-line))] bg-black/20 p-4"
+          >
+            <div className="flex items-center justify-between gap-4 border-b border-[rgb(var(--crt-line))] pb-3">
+              <p className="text-[12px] uppercase text-[rgb(var(--crt-green))]">
+                {category.label}
+              </p>
+              <span className="text-[11px] uppercase text-[rgb(var(--crt-muted))]">
+                CAT-{String(index + 1).padStart(2, '0')}
+              </span>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
               {category.skills.map((skill) => (
                 <span
                   key={skill}
-                  className="rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-[12px] font-medium tracking-[0.02em] text-white/82"
+                  className="border border-[rgb(var(--crt-line))] px-2.5 py-1.5 text-[11px] uppercase text-[rgb(var(--crt-dim))]"
                 >
                   {skill}
                 </span>

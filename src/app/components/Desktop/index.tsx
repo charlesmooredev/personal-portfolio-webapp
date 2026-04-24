@@ -1,14 +1,10 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { useCallback, useState, type ReactNode } from 'react'
-import { CpuFill, EnvelopeAtFill } from 'react-bootstrap-icons'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { projects } from '../../helpers/Projects'
 import { AppWindow } from '../AppWindow'
 import { ContactWindow } from '../AppWindow/ContactWindow'
 import { ProjectWindow } from '../AppWindow/ProjectWindow'
 import { SkillsWindow } from '../AppWindow/SkillsWindow'
-import { AppIcon } from './AppIcon'
-import { Dock } from './Dock'
-import { MenuBar } from './MenuBar'
 
 type OpenApp =
   | { type: 'project'; id: string }
@@ -16,271 +12,286 @@ type OpenApp =
   | { type: 'skills' }
   | null
 
-interface DeviceScreenProps {
-  mobile: boolean
-  onOpenApp: (app: Exclude<OpenApp, null>) => void
-  onClose: () => void
-  openApp: OpenApp
-  openProject: App.Data.ProjectData | null
+type OpenTarget = Exclude<OpenApp, null>
+
+const systemLinks = [
+  { label: 'Github', href: 'https://github.com/charlesmooredev' },
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/charles-m-159476297',
+  },
+  { label: 'Email', href: 'mailto:charles@cmooredev.com' },
+]
+
+const projectStatus = ['Active', 'Archived', 'Public', 'Restricted']
+
+function formatRecordId(index: number) {
+  return `REC-${String(index + 1).padStart(3, '0')}`
 }
 
-function UtilityAppButton({
-  name,
-  icon,
+function getProjectStatus(project: App.Data.ProjectData, index: number) {
+  if (!project.projectUrl) return 'Restricted'
+  return projectStatus[index % (projectStatus.length - 1)]
+}
+
+function getProjectTags(project: App.Data.ProjectData) {
+  return project.skills.slice(0, 3).map((skill) => skill.name)
+}
+
+function TerminalHeader() {
+  const [time, setTime] = useState(new Date())
+
+  useEffect(() => {
+    const interval = setInterval(() => setTime(new Date()), 60000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const timestamp = time
+    .toLocaleString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    })
+    .replace(',', '')
+
+  return (
+    <motion.header
+      className="relative z-10 border-b border-[rgb(var(--crt-line))] px-4 py-3 sm:px-6 lg:px-8"
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: 'easeOut' }}
+    >
+      <div className="grid gap-2 text-[11px] uppercase text-[rgb(var(--crt-muted))] sm:grid-cols-[1fr_auto] sm:items-center">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1">
+          <span className="phosphor text-[rgb(var(--crt-green))]">
+            Silo Records Console
+          </span>
+          <span>Operator / Charles Moore</span>
+          <span className="hidden sm:inline">Access / Portfolio Database</span>
+        </div>
+        <div className="flex items-center gap-3 sm:justify-end">
+          <span>{timestamp}</span>
+          <span className="h-2 w-2 bg-[rgb(var(--crt-green))] shadow-[0_0_14px_rgba(83,255,190,0.72)]" />
+        </div>
+      </div>
+    </motion.header>
+  )
+}
+
+function TerminalAction({
+  children,
   onClick,
-  index,
-  gradient,
+  active,
 }: {
-  name: string
-  icon: ReactNode
+  children: string
   onClick: () => void
-  index: number
-  gradient: string
+  active?: boolean
 }) {
   return (
-    <motion.button
-      className="flex w-[76px] flex-col items-center gap-2 text-center lg:w-[92px]"
+    <button
       onClick={onClick}
+      className={`group flex min-h-11 items-center justify-between border px-3 py-2 text-left text-[12px] uppercase text-[rgb(var(--crt-muted))] transition-colors hover:border-[rgb(var(--crt-cyan))] hover:text-[rgb(var(--crt-cyan))] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgb(var(--crt-cyan))] ${
+        active
+          ? 'border-[rgb(var(--crt-cyan))] bg-[rgba(70,246,255,0.08)] text-[rgb(var(--crt-cyan))]'
+          : 'border-[rgb(var(--crt-line))] bg-black/20'
+      }`}
+    >
+      <span>{children}</span>
+      <span className="text-[rgb(var(--crt-green))] opacity-70 transition-opacity group-hover:opacity-100">
+        EXEC
+      </span>
+    </button>
+  )
+}
+
+function ProjectRecordRow({
+  project,
+  index,
+  active,
+  onOpen,
+}: {
+  project: App.Data.ProjectData
+  index: number
+  active: boolean
+  onOpen: () => void
+}) {
+  const status = getProjectStatus(project, index)
+  const tags = getProjectTags(project)
+
+  return (
+    <motion.button
+      onClick={onOpen}
+      className={`record-row group grid min-h-[5.5rem] w-full grid-cols-[4.5rem_1fr] gap-3 border-b border-[rgb(var(--crt-line))] px-3 py-4 text-left text-[rgb(var(--crt-text))] transition-colors hover:bg-[rgba(70,246,255,0.06)] focus-visible:bg-[rgba(70,246,255,0.08)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[rgb(var(--crt-cyan))] sm:grid-cols-[5.5rem_minmax(0,1.2fr)_minmax(9rem,0.7fr)_7rem] sm:items-center lg:px-4 ${
+        active ? 'bg-[rgba(83,255,190,0.08)]' : ''
+      }`}
+      aria-label={`Open ${project.name} record`}
       variants={{
-        hidden: { opacity: 0, scale: 0.9, y: 18 },
+        hidden: { opacity: 0, y: 16 },
         visible: {
           opacity: 1,
-          scale: 1,
           y: 0,
           transition: {
-            type: 'spring',
-            stiffness: 220,
-            damping: 18,
-            delay: index * 0.05,
+            duration: 0.32,
+            ease: 'easeOut',
+            delay: index * 0.035,
           },
         },
       }}
-      whileHover={{ y: -5, scale: 1.04 }}
-      whileTap={{ scale: 0.94 }}
+      whileHover={{ x: 4 }}
+      whileTap={{ scale: 0.992 }}
     >
-      <div
-        className={`flex h-16 w-16 items-center justify-center rounded-[20px] border border-white/20 bg-gradient-to-br shadow-[0_18px_45px_rgba(3,8,20,0.45)] lg:h-[78px] lg:w-[78px] ${gradient}`}
-      >
-        {icon}
-      </div>
-      <span className="max-w-[78px] text-[11px] font-medium leading-tight text-white/92 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] lg:max-w-[92px]">
-        {name}
+      <span className="font-mono text-[12px] text-[rgb(var(--crt-green))]">
+        {formatRecordId(index)}
+      </span>
+
+      <span className="min-w-0">
+        <span className="block text-base font-semibold uppercase leading-5 text-[rgb(var(--crt-text))] sm:text-lg">
+          {project.name}
+        </span>
+        <span className="mt-1 block truncate text-[12px] uppercase text-[rgb(var(--crt-muted))]">
+          {project.role}
+        </span>
+      </span>
+
+      <span className="col-span-2 flex flex-wrap gap-1.5 sm:col-span-1">
+        {tags.map((tag) => (
+          <span
+            key={tag}
+            className="border border-[rgb(var(--crt-line))] px-2 py-1 text-[10px] uppercase text-[rgb(var(--crt-muted))] group-hover:border-[rgba(70,246,255,0.42)] group-hover:text-[rgb(var(--crt-cyan))]"
+          >
+            {tag}
+          </span>
+        ))}
+      </span>
+
+      <span className="col-span-2 flex items-center justify-between text-[11px] uppercase text-[rgb(var(--crt-muted))] sm:col-span-1 sm:block sm:text-right">
+        <span className="sm:hidden">Status</span>
+        <span
+          className={
+            status === 'Restricted'
+              ? 'text-[#ffd47a]'
+              : 'text-[rgb(var(--crt-green))]'
+          }
+        >
+          {status}
+        </span>
       </span>
     </motion.button>
   )
 }
 
-function DeviceScreen({
-  mobile,
-  onOpenApp,
-  onClose,
+function ConsoleSidebar({
   openApp,
-  openProject,
-}: DeviceScreenProps) {
-  const reduceMotion = useReducedMotion()
-
+  onOpenApp,
+}: {
+  openApp: OpenApp
+  onOpenApp: (target: OpenTarget) => void
+}) {
   return (
-    <div className="relative flex h-full flex-col overflow-hidden bg-[#08101d] text-white">
-      <img
-        src="/assets/desktop_background.png"
-        alt=""
-        className="absolute inset-0 h-full w-full scale-105 object-cover"
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,12,21,0.24)_0%,rgba(7,12,21,0.38)_44%,rgba(5,8,14,0.76)_100%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(130,166,255,0.2),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.12),transparent_32%)]" />
+    <aside className="terminal-panel flex flex-col gap-5 p-4 lg:min-h-0">
+      <section className="border-b border-[rgb(var(--crt-line))] pb-5">
+        <p className="text-[11px] uppercase text-[rgb(var(--crt-muted))]">
+          Active Operator
+        </p>
+        <h1 className="mt-3 text-[clamp(2.2rem,7vw,4.8rem)] font-black uppercase leading-[0.9] text-[rgb(var(--crt-text))] lg:text-[clamp(2.8rem,4.7vw,5rem)]">
+          Charles
+          <br />
+          Moore
+        </h1>
+        <p className="mt-4 text-sm leading-6 text-[rgb(var(--crt-dim))]">
+          Frontend engineer building polished product systems with React,
+          TypeScript, motion, and production discipline.
+        </p>
+      </section>
 
-      <div className="relative z-10 flex h-full flex-col">
-        <MenuBar />
+      <nav className="grid gap-2" aria-label="Records console navigation">
+        <TerminalAction
+          onClick={() => onOpenApp({ type: 'skills' })}
+          active={openApp?.type === 'skills'}
+        >
+          Skills Record
+        </TerminalAction>
+        <TerminalAction
+          onClick={() => onOpenApp({ type: 'contact' })}
+          active={openApp?.type === 'contact'}
+        >
+          Contact Channel
+        </TerminalAction>
+      </nav>
 
-        {mobile ? (
-          <div className="relative flex flex-1 overflow-hidden">
-            <div className="h-full w-full overflow-y-auto px-4 pb-[8.75rem] pt-3 window-scroll">
-              <motion.div
-                className="pb-5 text-center"
-                initial={reduceMotion ? undefined : { opacity: 0, y: 18 }}
-                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: 0.15 }}
-              >
-                <p className="text-[12px] uppercase tracking-[0.35em] text-white/58">
-                  Portfolio
-                </p>
-                <h1 className="mt-2 text-[30px] font-semibold tracking-[-0.04em] text-white">
-                  Charles Moore
-                </h1>
-                <p className="mx-auto mt-2 max-w-[18rem] text-sm leading-6 text-white/72">
-                  Frontend engineer shipping polished product surfaces with
-                  motion, clarity, and production discipline.
-                </p>
-              </motion.div>
-
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  hidden: {},
-                  visible: {
-                    transition: { staggerChildren: reduceMotion ? 0 : 0.04 },
-                  },
-                }}
-              >
-                <div className="grid grid-cols-3 justify-items-center gap-x-3 gap-y-5">
-                  {projects.map((project, index) => (
-                    <AppIcon
-                      key={project.id}
-                      name={project.name}
-                      thumbnail={project.thumbnail}
-                      onClick={() =>
-                        onOpenApp({ type: 'project', id: project.id })
-                      }
-                      index={index}
-                    />
-                  ))}
-
-                  <UtilityAppButton
-                    name="Skills"
-                    icon={<CpuFill size={30} className="text-white" />}
-                    onClick={() => onOpenApp({ type: 'skills' })}
-                    index={projects.length}
-                    gradient="from-[#37c791] via-[#18a96a] to-[#0b7e4c]"
-                  />
-
-                  <UtilityAppButton
-                    name="Contact"
-                    icon={<EnvelopeAtFill size={28} className="text-white" />}
-                    onClick={() => onOpenApp({ type: 'contact' })}
-                    index={projects.length + 1}
-                    gradient="from-[#6ca8ff] via-[#3478f6] to-[#134ad9]"
-                  />
-                </div>
-              </motion.div>
-            </div>
-
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-28 bg-[linear-gradient(180deg,rgba(5,8,14,0),rgba(5,8,14,0.72)_58%,rgba(5,8,14,0.96)_100%)]" />
-
-            <div className="absolute bottom-5 left-1/2 z-20 -translate-x-1/2">
-              <Dock variant="mobile" />
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-1 gap-6 px-8 pb-5 pt-6">
-            <motion.div
-              className="flex min-w-0 flex-[1.15] flex-col justify-between"
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: {},
-                visible: {
-                  transition: { staggerChildren: reduceMotion ? 0 : 0.04 },
-                },
-              }}
+      <section className="mt-auto border-t border-[rgb(var(--crt-line))] pt-5">
+        <p className="text-[11px] uppercase text-[rgb(var(--crt-muted))]">
+          External Lines
+        </p>
+        <div className="mt-3 grid gap-2">
+          {systemLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex min-h-10 items-center justify-between border border-[rgb(var(--crt-line))] px-3 text-[12px] uppercase text-[rgb(var(--crt-muted))] transition-colors hover:border-[rgb(var(--crt-green))] hover:text-[rgb(var(--crt-green))] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgb(var(--crt-green))]"
             >
-              <div className="space-y-3">
-                <p className="text-[12px] uppercase tracking-[0.38em] text-white/54">
-                  Portfolio OS
-                </p>
-                <div className="grid grid-cols-5 gap-x-6 gap-y-7">
-                  {projects.map((project, index) => (
-                    <AppIcon
-                      key={project.id}
-                      name={project.name}
-                      thumbnail={project.thumbnail}
-                      onClick={() =>
-                        onOpenApp({ type: 'project', id: project.id })
-                      }
-                      index={index}
-                    />
-                  ))}
+              <span>{link.label}</span>
+              <span>OUT</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    </aside>
+  )
+}
 
-                  <UtilityAppButton
-                    name="Skills"
-                    icon={<CpuFill size={30} className="text-white" />}
-                    onClick={() => onOpenApp({ type: 'skills' })}
-                    index={projects.length}
-                    gradient="from-[#37c791] via-[#18a96a] to-[#0b7e4c]"
-                  />
-
-                  <UtilityAppButton
-                    name="Contact"
-                    icon={<EnvelopeAtFill size={28} className="text-white" />}
-                    onClick={() => onOpenApp({ type: 'contact' })}
-                    index={projects.length + 1}
-                    gradient="from-[#6ca8ff] via-[#3478f6] to-[#134ad9]"
-                  />
-                </div>
-              </div>
-
-              <Dock variant="desktop" />
-            </motion.div>
-
-            <motion.aside
-              className="relative flex w-[29%] min-w-[280px] flex-col justify-between py-3"
-              initial={reduceMotion ? undefined : { opacity: 0, x: 28 }}
-              animate={reduceMotion ? undefined : { opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.15 }}
-            >
-              <div>
-                <p className="text-[12px] uppercase tracking-[0.38em] text-white/54">
-                  Charles Moore
-                </p>
-                <h1 className="mt-3 text-[clamp(2.8rem,4vw,4.6rem)] font-semibold leading-none tracking-[-0.055em] text-white">
-                  Designed like a desktop.
-                </h1>
-                <p className="mt-5 max-w-sm text-base leading-7 text-white/70">
-                  Open any project to see product thinking, implementation
-                  range, and the kind of frontend craft I bring to shipped
-                  software.
-                </p>
-              </div>
-
-              <div className="space-y-4 border-t border-white/14 pt-6">
-                <div className="flex items-center justify-between text-[13px] text-white/58">
-                  <span>Focus</span>
-                  <span>React, TypeScript, Motion</span>
-                </div>
-                <div className="flex items-center justify-between text-[13px] text-white/58">
-                  <span>Role</span>
-                  <span>Frontend Engineer</span>
-                </div>
-                <div className="rounded-[28px] border border-white/12 bg-white/10 px-5 py-4 backdrop-blur-xl">
-                  <p className="text-[11px] uppercase tracking-[0.35em] text-white/48">
-                    Recommended
-                  </p>
-                  <p className="mt-2 text-base font-medium text-white">
-                    Start with Anymals or Ozone.
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-white/66">
-                    They show the clearest mix of interface polish, complex
-                    product constraints, and full-build ownership.
-                  </p>
-                </div>
-              </div>
-            </motion.aside>
-          </div>
-        )}
+function ConsoleInspector() {
+  return (
+    <aside className="terminal-panel hidden min-h-0 flex-col p-4 xl:flex">
+      <p className="text-[11px] uppercase text-[rgb(var(--crt-muted))]">
+        Read Priority
+      </p>
+      <div className="mt-4 grid gap-4">
+        <div className="border-t border-[rgb(var(--crt-line))] pt-4">
+          <p className="text-[12px] uppercase text-[rgb(var(--crt-green))]">
+            Anymals
+          </p>
+          <p className="mt-2 text-sm leading-6 text-[rgb(var(--crt-dim))]">
+            Strongest record for product ownership, complex frontend systems,
+            AI flows, Web3 auth, and PWA delivery.
+          </p>
+        </div>
+        <div className="border-t border-[rgb(var(--crt-line))] pt-4">
+          <p className="text-[12px] uppercase text-[rgb(var(--crt-green))]">
+            Ozone
+          </p>
+          <p className="mt-2 text-sm leading-6 text-[rgb(var(--crt-dim))]">
+            Best record for production UI implementation, design translation,
+            and early-stage engineering range.
+          </p>
+        </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-white/12" />
-
-      <AnimatePresence>
-        {openApp?.type === 'project' && openProject && (
-          <AppWindow key={openProject.id} onClose={onClose} title={openProject.name}>
-            <ProjectWindow project={openProject} />
-          </AppWindow>
-        )}
-
-        {openApp?.type === 'skills' && (
-          <AppWindow key="skills" onClose={onClose} title="Skills & Technologies">
-            <SkillsWindow />
-          </AppWindow>
-        )}
-
-        {openApp?.type === 'contact' && (
-          <AppWindow key="contact" onClose={onClose} title="Contact">
-            <ContactWindow />
-          </AppWindow>
-        )}
-      </AnimatePresence>
-    </div>
+      <div className="mt-auto border-t border-[rgb(var(--crt-line))] pt-5">
+        <p className="text-[11px] uppercase text-[rgb(var(--crt-muted))]">
+          Terminal State
+        </p>
+        <dl className="mt-3 grid gap-3 text-[12px] uppercase">
+          <div className="flex justify-between gap-4">
+            <dt className="text-[rgb(var(--crt-muted))]">Records</dt>
+            <dd className="text-[rgb(var(--crt-text))]">{projects.length}</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-[rgb(var(--crt-muted))]">Core</dt>
+            <dd className="text-[rgb(var(--crt-text))]">React / TS</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-[rgb(var(--crt-muted))]">Mode</dt>
+            <dd className="text-[rgb(var(--crt-green))]">Readable CRT</dd>
+          </div>
+        </dl>
+      </div>
+    </aside>
   )
 }
 
@@ -290,65 +301,104 @@ export function Desktop() {
 
   const handleClose = useCallback(() => setOpenApp(null), [])
 
-  const openProject =
-    openApp?.type === 'project'
-      ? projects.find((project) => project.id === openApp.id) ?? null
-      : null
+  const openProject = useMemo(
+    () =>
+      openApp?.type === 'project'
+        ? projects.find((project) => project.id === openApp.id) ?? null
+        : null,
+    [openApp],
+  )
 
   return (
-    <div className="relative min-h-[100svh] overflow-hidden bg-[#b5bfce]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.85),transparent_32%),linear-gradient(180deg,#d9e0ea_0%,#b9c3d1_36%,#8e9caf_100%)]" />
-      <div className="absolute left-1/2 top-[-18rem] h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-white/55 blur-3xl" />
-      <div className="absolute left-[10%] top-[22%] h-72 w-72 rounded-full bg-[#8ea6d9]/30 blur-3xl" />
-      <div className="absolute bottom-[-10rem] right-[10%] h-80 w-80 rounded-full bg-[#4f658a]/30 blur-3xl" />
+    <div className="crt-shell relative h-[100svh] overflow-hidden bg-[rgb(var(--crt-bg))] font-mono text-[rgb(var(--crt-text))]">
+      <motion.div
+        className="relative z-10 flex h-full min-h-0 flex-col"
+        initial={reduceMotion ? undefined : { opacity: 0, filter: 'blur(6px)' }}
+        animate={reduceMotion ? undefined : { opacity: 1, filter: 'blur(0px)' }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+      >
+        <TerminalHeader />
 
-      <div className="relative flex min-h-[100svh] items-center justify-center px-3 py-4 sm:px-5 lg:px-8 lg:py-10">
-        <motion.div
-          className="w-full max-w-[1320px]"
-          initial={reduceMotion ? undefined : { opacity: 0, y: 28, scale: 0.985 }}
-          animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.55, ease: 'easeOut' }}
-        >
-          <div className="mx-auto flex w-full justify-center lg:hidden">
-            <div className="relative h-[min(860px,94svh)] w-full max-w-[390px] rounded-[3.2rem] bg-[#0d1015] p-[10px] shadow-[0_45px_100px_rgba(15,23,42,0.42),0_10px_30px_rgba(15,23,42,0.24)] ring-1 ring-white/30">
-              <div className="absolute inset-[10px] rounded-[2.6rem] border border-white/8" />
-              <div className="relative h-full overflow-hidden rounded-[2.55rem] bg-[#08101d] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-                <div className="pointer-events-none absolute inset-[2px] z-20 rounded-[2.42rem] border border-[#2d5dff]/60 shadow-[inset_0_0_0_1px_rgba(46,93,255,0.15)]" />
-                <DeviceScreen
-                  mobile
-                  onOpenApp={setOpenApp}
-                  onClose={handleClose}
-                  openApp={openApp}
-                  openProject={openProject}
+        <main className="window-scroll grid min-h-0 flex-1 gap-3 overflow-y-auto p-3 sm:p-4 lg:grid-cols-[minmax(15rem,0.7fr)_minmax(0,1.8fr)] lg:overflow-hidden xl:grid-cols-[minmax(17rem,0.7fr)_minmax(0,1.65fr)_minmax(15rem,0.55fr)]">
+          <ConsoleSidebar openApp={openApp} onOpenApp={setOpenApp} />
+
+          <section className="terminal-panel flex min-h-[32rem] flex-col overflow-hidden">
+            <div className="grid gap-3 border-b border-[rgb(var(--crt-line))] p-4 sm:grid-cols-[1fr_auto] sm:items-end">
+              <div>
+                <p className="text-[11px] uppercase text-[rgb(var(--crt-muted))]">
+                  Dossier Database / Project Records
+                </p>
+                <h2 className="mt-2 text-2xl font-bold uppercase leading-tight text-[rgb(var(--crt-text))] sm:text-4xl">
+                  Select a record
+                  <span className="cursor-blink ml-2 inline-block h-[1em] w-2 translate-y-1 bg-[rgb(var(--crt-green))]" />
+                </h2>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-center text-[10px] uppercase text-[rgb(var(--crt-muted))]">
+                <span className="border border-[rgb(var(--crt-line))] px-2 py-1">
+                  UI
+                </span>
+                <span className="border border-[rgb(var(--crt-line))] px-2 py-1">
+                  Motion
+                </span>
+                <span className="border border-[rgb(var(--crt-line))] px-2 py-1">
+                  Product
+                </span>
+              </div>
+            </div>
+
+            <div className="hidden grid-cols-[5.5rem_minmax(0,1.2fr)_minmax(9rem,0.7fr)_7rem] border-b border-[rgb(var(--crt-line))] px-4 py-2 text-[10px] uppercase text-[rgb(var(--crt-muted))] sm:grid">
+              <span>ID</span>
+              <span>Record Name / Role</span>
+              <span>Stack Tags</span>
+              <span className="text-right">Access</span>
+            </div>
+
+            <motion.div
+              className="window-scroll min-h-0 flex-1 overflow-y-auto"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: { staggerChildren: reduceMotion ? 0 : 0.035 },
+                },
+              }}
+            >
+              {projects.map((project, index) => (
+                <ProjectRecordRow
+                  key={project.id}
+                  project={project}
+                  index={index}
+                  active={openApp?.type === 'project' && openApp.id === project.id}
+                  onOpen={() => setOpenApp({ type: 'project', id: project.id })}
                 />
-                <div className="pointer-events-none absolute bottom-2 left-1/2 z-20 h-1.5 w-28 -translate-x-1/2 rounded-full bg-white/70" />
-              </div>
-            </div>
-          </div>
+              ))}
+            </motion.div>
+          </section>
 
-          <div className="hidden lg:flex flex-col items-center">
-            <div className="w-full max-w-[1180px]">
-              <div className="rounded-[32px] bg-[linear-gradient(180deg,#4b515c_0%,#1e242d_18%,#121721_100%)] p-3 shadow-[0_60px_120px_rgba(15,23,42,0.28),0_12px_24px_rgba(15,23,42,0.2)] ring-1 ring-white/32">
-                <div className="relative aspect-[16/10] overflow-hidden rounded-[24px] border border-white/14 bg-black">
-                  <div className="pointer-events-none absolute left-1/2 top-0 z-30 h-5 w-28 -translate-x-1/2 rounded-b-[18px] bg-black/92 shadow-[0_8px_20px_rgba(0,0,0,0.55)]" />
-                  <DeviceScreen
-                    mobile={false}
-                    onOpenApp={setOpenApp}
-                    onClose={handleClose}
-                    openApp={openApp}
-                    openProject={openProject}
-                  />
-                </div>
-              </div>
-            </div>
+          <ConsoleInspector />
+        </main>
+      </motion.div>
 
-            <div className="w-[84%] max-w-[980px]">
-              <div className="mx-auto h-7 rounded-b-[34px] bg-[linear-gradient(180deg,#edf1f6_0%,#ccd4df_44%,#8d98a7_100%)] shadow-[0_22px_40px_rgba(15,23,42,0.18)] ring-1 ring-white/55" />
-              <div className="mx-auto h-5 w-[30%] rounded-b-[20px] bg-[linear-gradient(180deg,#c5ced9_0%,#8f9baa_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.68)]" />
-            </div>
-          </div>
-        </motion.div>
-      </div>
+      <AnimatePresence>
+        {openApp?.type === 'project' && openProject && (
+          <AppWindow key={openProject.id} onClose={handleClose} title={openProject.name}>
+            <ProjectWindow project={openProject} />
+          </AppWindow>
+        )}
+
+        {openApp?.type === 'skills' && (
+          <AppWindow key="skills" onClose={handleClose} title="Skills Record">
+            <SkillsWindow />
+          </AppWindow>
+        )}
+
+        {openApp?.type === 'contact' && (
+          <AppWindow key="contact" onClose={handleClose} title="Contact Channel">
+            <ContactWindow />
+          </AppWindow>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

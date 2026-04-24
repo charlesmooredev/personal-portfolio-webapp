@@ -5,10 +5,17 @@
 @layer base {
     :root {
         color-scheme: dark;
-        font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background:
-            radial-gradient(circle at top, #24314a 0%, rgba(36, 49, 74, 0) 34%),
-            linear-gradient(180deg, #dbe1eb 0%, #bcc5d3 42%, #98a5b8 100%);
+        font-family:
+            ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+            "Liberation Mono", "Courier New", monospace;
+        --crt-bg: 1 6 5;
+        --crt-panel: 4 17 15;
+        --crt-text: 207 255 235;
+        --crt-dim: 140 194 178;
+        --crt-muted: 82 132 120;
+        --crt-green: 83 255 190;
+        --crt-cyan: 70 246 255;
+        --crt-line: 34 86 74;
     }
 
     * {
@@ -17,17 +24,21 @@
 
     html {
         height: 100%;
+        background: rgb(var(--crt-bg));
     }
 
     body {
         min-height: 100svh;
         margin: 0;
-        background:
-            radial-gradient(circle at top, #24314a 0%, rgba(36, 49, 74, 0) 34%),
-            linear-gradient(180deg, #dbe1eb 0%, #bcc5d3 42%, #98a5b8 100%);
-        color: #f5f7fb;
-        font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         overflow: hidden;
+        background:
+            radial-gradient(circle at 50% -20%, rgba(70, 246, 255, 0.15), transparent 38%),
+            radial-gradient(circle at 100% 100%, rgba(83, 255, 190, 0.1), transparent 34%),
+            rgb(var(--crt-bg));
+        color: rgb(var(--crt-text));
+        font-family:
+            ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+            "Liberation Mono", "Courier New", monospace;
     }
 
     button,
@@ -37,10 +48,11 @@
     select {
         font: inherit;
     }
-}
 
-body {
-    min-height: 100svh;
+    button,
+    a {
+        -webkit-tap-highlight-color: transparent;
+    }
 }
 
 #root {
@@ -48,9 +60,87 @@ body {
     overflow: hidden;
 }
 
-/* Custom scrollbar for app windows */
+.crt-shell {
+    background:
+        radial-gradient(circle at 18% 8%, rgba(70, 246, 255, 0.12), transparent 24rem),
+        radial-gradient(circle at 84% 18%, rgba(83, 255, 190, 0.09), transparent 22rem),
+        linear-gradient(180deg, rgba(1, 12, 10, 0.96), rgba(0, 4, 4, 1));
+}
+
+.crt-shell::before,
+.crt-shell::after {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+}
+
+.crt-shell::before {
+    opacity: 0.28;
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.055) 50%, rgba(0, 0, 0, 0.14) 50%),
+        linear-gradient(90deg, rgba(70, 246, 255, 0.035), rgba(83, 255, 190, 0.018), rgba(70, 246, 255, 0.035));
+    background-size: 100% 4px, 6px 100%;
+    mix-blend-mode: screen;
+}
+
+.crt-shell::after {
+    opacity: 0.86;
+    background:
+        radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.48) 100%),
+        linear-gradient(90deg, rgba(70, 246, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(rgba(83, 255, 190, 0.038) 1px, transparent 1px);
+    background-size: auto, 64px 64px, 64px 64px;
+}
+
+.terminal-panel {
+    border: 1px solid rgb(var(--crt-line));
+    background:
+        linear-gradient(180deg, rgba(7, 24, 21, 0.9), rgba(2, 10, 9, 0.94)),
+        rgb(var(--crt-panel));
+    box-shadow:
+        inset 0 0 0 1px rgba(70, 246, 255, 0.04),
+        0 0 42px rgba(70, 246, 255, 0.055);
+}
+
+.phosphor {
+    text-shadow:
+        0 0 9px rgba(83, 255, 190, 0.52),
+        0 0 22px rgba(70, 246, 255, 0.16);
+}
+
+.record-row {
+    position: relative;
+    overflow: hidden;
+}
+
+.record-row::before {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    inset: 0;
+    translate: -105% 0;
+    background: linear-gradient(90deg, transparent, rgba(70, 246, 255, 0.16), transparent);
+    transition: translate 420ms ease;
+}
+
+.record-row:hover::before,
+.record-row:focus-visible::before {
+    translate: 105% 0;
+}
+
+.cursor-blink {
+    animation: cursor-blink 1.1s steps(2, start) infinite;
+}
+
+.window-scroll {
+    scrollbar-color: rgb(var(--crt-line)) transparent;
+}
+
 .window-scroll::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
 }
 
 .window-scroll::-webkit-scrollbar-track {
@@ -58,18 +148,36 @@ body {
 }
 
 .window-scroll::-webkit-scrollbar-thumb {
-    background: #3a3a4a;
-    border-radius: 4px;
+    background: rgb(var(--crt-line));
 }
 
 .window-scroll::-webkit-scrollbar-thumb:hover {
-    background: #52526a;
+    background: rgba(70, 246, 255, 0.52);
+}
+
+@keyframes cursor-blink {
+    0%,
+    46% {
+        opacity: 1;
+    }
+
+    47%,
+    100% {
+        opacity: 0;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+    }
+
+    .record-row::before {
+        display: none;
     }
 }

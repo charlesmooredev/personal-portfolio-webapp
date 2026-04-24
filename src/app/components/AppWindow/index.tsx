@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 import { useEffect, type ReactNode } from 'react'
 
 interface Props {
@@ -8,6 +8,8 @@ interface Props {
 }
 
 export function AppWindow({ onClose, title, children }: Props) {
+  const reduceMotion = useReducedMotion()
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
@@ -17,79 +19,67 @@ export function AppWindow({ onClose, title, children }: Props) {
   }, [onClose])
 
   return (
-    <div className="absolute inset-0 z-[100] flex items-center justify-center">
+    <div className="absolute inset-0 z-[100] flex items-stretch justify-center p-2 sm:p-4 lg:p-8">
       <motion.div
-        className="absolute inset-0 bg-[#05080d]/56 backdrop-blur-md"
+        className="absolute inset-0 bg-black/72 backdrop-blur-[2px]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={{ opacity: 0, transition: { duration: 0.15 } }}
-        transition={{ duration: 0.2 }}
+        exit={{ opacity: 0, transition: { duration: 0.14 } }}
+        transition={{ duration: 0.18 }}
         onClick={onClose}
       />
 
       <motion.div
-        className="relative flex h-full w-full flex-col overflow-hidden bg-[linear-gradient(180deg,rgba(16,21,31,0.96),rgba(10,14,22,0.94))] shadow-2xl shadow-black/45 lg:m-8 lg:h-[calc(100%-4rem)] lg:max-h-[760px] lg:w-[min(100%-4rem,1024px)] lg:rounded-[28px] lg:border lg:border-white/12 lg:backdrop-blur-2xl"
-        initial={{ opacity: 0, scale: 0.94, y: 24 }}
-        animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
-        exit={{
-          opacity: 0,
-          scale: 0.97,
-          y: 15,
-          filter: 'blur(8px)',
-          transition: {
-            duration: 0.22,
-            ease: [0.36, 0, 0.66, 0.2],
-          },
-        }}
-        transition={{ type: 'spring', bounce: 0.18, duration: 0.48 }}
+        className="terminal-panel relative flex h-full w-full max-w-[1120px] flex-col overflow-hidden shadow-[0_0_70px_rgba(70,246,255,0.12)] lg:max-h-[820px]"
+        initial={
+          reduceMotion
+            ? { opacity: 0 }
+            : { opacity: 0, scaleY: 0.92, y: 18, filter: 'blur(5px)' }
+        }
+        animate={
+          reduceMotion
+            ? { opacity: 1 }
+            : { opacity: 1, scaleY: 1, y: 0, filter: 'blur(0px)' }
+        }
+        exit={
+          reduceMotion
+            ? { opacity: 0 }
+            : {
+                opacity: 0,
+                scaleY: 0.96,
+                y: 12,
+                filter: 'blur(6px)',
+                transition: { duration: 0.18, ease: [0.36, 0, 0.66, 0.2] },
+              }
+        }
+        transition={{ duration: 0.34, ease: 'easeOut' }}
       >
-        <div className="flex h-14 shrink-0 items-center border-b border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04))] px-4 backdrop-blur-xl lg:h-12">
-          <div className="hidden items-center gap-2 lg:flex">
-            <button
-              onClick={onClose}
-              className="group relative h-3 w-3 rounded-full bg-[#ff5f57] transition-all hover:brightness-110"
-              aria-label={`Close ${title}`}
-            >
-              <svg
-                className="h-3 w-3 text-[#4a0002] opacity-0 transition-opacity group-hover:opacity-100"
-                viewBox="0 0 12 12"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path d="M3 3l6 6M9 3l-6 6" />
-              </svg>
-            </button>
-            <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
-            <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+        <div className="grid min-h-14 shrink-0 grid-cols-[1fr_auto] items-center gap-3 border-b border-[rgb(var(--crt-line))] bg-black/35 px-3 py-3 sm:grid-cols-[1fr_auto_1fr] sm:px-4">
+          <div className="min-w-0">
+            <p className="truncate text-[11px] uppercase text-[rgb(var(--crt-muted))]">
+              Open Record / {title}
+            </p>
+            <p className="mt-1 truncate text-sm uppercase text-[rgb(var(--crt-green))]">
+              SYS.STATUS: ACTIVE
+            </p>
           </div>
 
-          <button
-            onClick={onClose}
-            className="flex items-center gap-1 text-sm font-medium text-[#8fc0ff] lg:hidden"
-          >
-            <svg
-              className="h-4 w-4"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              <path d="M10 3L5 8l5 5" />
-            </svg>
-            Home
-          </button>
-
-          <div className="flex-1 text-center text-[13px] font-medium text-white/62 select-none">
+          <div className="hidden text-center text-[12px] uppercase text-[rgb(var(--crt-text))] sm:block">
             {title}
           </div>
 
-          <div className="w-[52px] lg:hidden" />
-          <div className="hidden w-[52px] lg:block" />
+          <div className="flex justify-end">
+            <button
+              onClick={onClose}
+              className="min-h-10 border border-[rgb(var(--crt-line))] px-3 text-[12px] uppercase text-[rgb(var(--crt-muted))] transition-colors hover:border-[#ffd47a] hover:text-[#ffd47a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd47a]"
+              aria-label={`Close ${title}`}
+            >
+              Close / ESC
+            </button>
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto bg-[linear-gradient(180deg,rgba(10,14,22,0.78),rgba(5,8,14,0.94))] window-scroll">
+        <div className="window-scroll min-h-0 flex-1 overflow-y-auto bg-black/20">
           {children}
         </div>
       </motion.div>

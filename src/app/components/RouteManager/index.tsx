@@ -1,11 +1,11 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { Routes } from '../../helpers/Routes.ts'
-import { Desktop } from '../Desktop'
+import { PortfolioExperience } from '../Portfolio'
 
 const router = createBrowserRouter([
   {
     path: Routes.Home,
-    element: <Desktop />,
+    element: <PortfolioExperience />,
   },
   {
     path: '*',

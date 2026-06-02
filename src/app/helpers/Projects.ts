@@ -10,6 +10,7 @@ export const projects: ProjectData[] = [
     skills: [
       { name: 'React' },
       { name: 'TypeScript' },
+      { name: 'Node.js' },
       { name: 'TailwindCSS' },
       { name: 'Redux Toolkit' },
       { name: 'RTK Query' },
@@ -17,9 +18,9 @@ export const projects: ProjectData[] = [
       { name: 'AWS Amplify' },
       { name: 'Web3' },
     ],
-    role: 'Founder & Lead Frontend Engineer',
+    role: 'Founder & Lead Full-Stack Product Engineer',
     responsibilities:
-      'Architected and built the frontend for three interconnected pet-tech platforms from scratch. Integrated AI-powered pet facial recognition with streaming SSE data flows, Coinbase CDP SDK for Web3 Smart Wallet auth and on-chain transactions, and published reusable NPM packages consumed across the ecosystem. Designed all UI/UX in Figma and delivered pixel-perfect implementations with full PWA and Capacitor mobile support.',
+      'Architected and built three interconnected pet-tech platforms from scratch, leading the frontend while owning the product architecture needed to ship. Integrated AI-powered pet facial recognition with streaming SSE data flows, Coinbase CDP SDK for Web3 Smart Wallet auth and on-chain transactions, and Node.js/NPM package workflows consumed across the ecosystem. Designed all UI/UX in Figma and delivered pixel-perfect implementations with full PWA and Capacitor mobile support.',
     projectUrl: 'https://anymals.xyz',
   },
   {
@@ -48,15 +49,17 @@ export const projects: ProjectData[] = [
       'Digital Mob Boss, LLC is a gaming studio behind multiple live browser-based titles including New Mobsters and Sorority Wars. The studio has maintained active player communities across its game portfolio for over 8 years.',
     skills: [
       { name: 'Vue.js' },
+      { name: 'Laravel' },
+      { name: 'Laravel APIs' },
+      { name: 'Laravel Nova' },
       { name: 'VueX' },
       { name: 'JavaScript' },
       { name: 'TailwindCSS' },
-      { name: 'Laravel Nova' },
       { name: 'Adobe XD' },
     ],
-    role: 'Frontend Software Engineer',
+    role: 'Full-Stack Software Engineer',
     responsibilities:
-      'Built and maintained multiple feature-rich gaming web apps (New Mobsters, Sorority Wars) using Vue.js and TailwindCSS over a sustained 8+ year engagement. Designed wireframes and UI mock-ups in Adobe XD, engineered admin panels with Laravel Nova for backend content management, and continuously shipped UI/UX improvements driven by player feedback.',
+      'Built and maintained multiple feature-rich gaming web apps (New Mobsters, Sorority Wars) over a sustained 8+ year engagement. Owned Vue.js and TailwindCSS gameplay interfaces, wrote Laravel backend API systems, built Laravel Nova operational tooling for content workflows, supported live operations, and continuously shipped UI/UX improvements driven by player feedback.',
   },
   {
     id: 'mylikeness',
@@ -101,15 +104,17 @@ export const projects: ProjectData[] = [
       'Sorority Wars is an engaging browser-based game where players navigate the glamorous world of fashion, aiming to rise to the top. Compete in style challenges, build your wardrobe, and make strategic social moves to become the ultimate fashion icon in the sorority scene.',
     skills: [
       { name: 'Vue.js' },
+      { name: 'Laravel' },
+      { name: 'Laravel APIs' },
+      { name: 'Laravel Nova' },
       { name: 'VueX' },
       { name: 'JavaScript' },
       { name: 'TailwindCSS' },
-      { name: 'Laravel Nova' },
       { name: 'Adobe XD' },
     ],
-    role: 'Frontend Software Engineer',
+    role: 'Full-Stack Software Engineer',
     responsibilities:
-      'Built and maintained feature-rich gaming interfaces over a sustained 8+ year engagement using Vue.js and TailwindCSS. Designed wireframes and UI mock-ups in Adobe XD, engineered admin panels with Laravel Nova for backend content management, and continuously shipped UI/UX improvements driven by player feedback.',
+      'Built and maintained the live browser-game product as full-stack work across Vue.js/TailwindCSS interfaces, Laravel backend API systems, and Laravel Nova operational tooling. Designed wireframes and UI mock-ups in Adobe XD, supported backend content and API workflows, and continuously shipped improvements driven by player feedback.',
     projectUrl: 'https://sororitywars.app/',
   },
   {
@@ -120,15 +125,17 @@ export const projects: ProjectData[] = [
       'Mobsters: New Beginnings is an immersive browser-based game where players strive to rise through the ranks to become the top mobster. Engage in strategic battles, build your criminal empire, and outmaneuver rivals in a quest for power and dominance in the underworld.',
     skills: [
       { name: 'Vue.js' },
+      { name: 'Laravel' },
+      { name: 'Laravel APIs' },
+      { name: 'Laravel Nova' },
       { name: 'VueX' },
       { name: 'JavaScript' },
       { name: 'TailwindCSS' },
-      { name: 'Laravel Nova' },
       { name: 'Adobe XD' },
     ],
-    role: 'Frontend Software Engineer',
+    role: 'Full-Stack Software Engineer',
     responsibilities:
-      'Built and maintained feature-rich gaming interfaces over a sustained 8+ year engagement using Vue.js and TailwindCSS. Designed wireframes and UI mock-ups in Adobe XD, engineered admin panels with Laravel Nova for backend content management, and continuously shipped UI/UX improvements driven by player feedback to maintain active user engagement.',
+      'Built and maintained the live browser-game product as full-stack work across Vue.js/TailwindCSS interfaces, Laravel backend API systems, and Laravel Nova operational tooling. Designed wireframes and UI mock-ups in Adobe XD, supported backend content and API workflows, and continuously shipped improvements driven by player feedback to maintain active user engagement.',
     projectUrl: 'https://top.newmobsters.com/',
   },
   {
